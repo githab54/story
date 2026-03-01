@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Unit 10 — SHM & Waves | 88 MCQs (Updated)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{--bg:#f6f8ff;--card:#ffffff;--accent:#2563eb;--ok:#16a34a;--bad:#dc2626}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:var(--bg);color:#111}
+    .wrap{max-width:900px;margin:30px auto;padding:18px}
+    .card{background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(20,30,60,0.06);padding:22px}
+    h1{margin:0 0 6px;font-size:20px}
+    .meta{color:#555;margin-bottom:14px}
+    .question{font-size:18px;margin:14px 0 12px}
+    .options{display:grid;grid-template-columns:1fr;gap:10px}
+    .opt{
+      border:1px solid #e6eefc;padding:12px 14px;border-radius:10px;background:#fff;cursor:pointer;
+      text-align:left;font-size:15px;transition:transform .06s,box-shadow .06s;
+    }
+    .opt:active{transform:translateY(1px)}
+    .opt.disabled{opacity:.7;pointer-events:none}
+    .opt.correct{border-color:rgba(22,163,74,.18);box-shadow:0 8px 24px rgba(22,163,74,.06);background:rgba(22,163,74,.06)}
+    .opt.wrong{border-color:rgba(220,38,38,.14);box-shadow:0 8px 24px rgba(220,38,38,.04);background:rgba(220,38,38,.04)}
+    .feedback{height:24px;margin-top:10px;font-weight:700}
+    .progress{display:flex;align-items:center;justify-content:space-between;margin-top:16px;color:#444}
+    .bar{flex:1;height:10px;background:#eef3ff;border-radius:999px;margin:0 12px;overflow:hidden}
+    .fill{height:100%;background:var(--accent);width:0%}
+    .footer{margin-top:18px;color:#666;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+    .btn{
+      padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:600
+    }
+    .small{font-size:13px;color:#666}
+    .resultBox{text-align:center;padding:14px;border-radius:10px;border:1px dashed #e6eefc;margin-top:12px}
+    #nextBtn{display:none;margin-top:12px;padding:8px 12px;border-radius:8px;border:none;background:#2563eb;color:#fff;cursor:pointer;font-weight:600}
+    @media (max-width:560px){
+      .wrap{margin:12px;padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Unit 10 — Simple Harmonic Motion & Waves</h1>
+      <div class="meta small">Updated: if answer is wrong you will see correct answer and must click "Next" to continue.</div>
+
+      <div id="quiz">
+        <div id="qnum" class="small">Question 1 / 88</div>
+        <div id="qtext" class="question">Loading…</div>
+        <div id="opts" class="options"></div>
+        <button id="nextBtn">Next</button>
+        <div id="feedback" class="feedback"></div>
+
+        <div class="progress" aria-hidden="true">
+          <div class="small">Score: <span id="score">0</span></div>
+          <div class="bar"><div id="fill" class="fill"></div></div>
+          <div class="small" id="pct">0%</div>
+        </div>
+
+        <div id="end" style="display:none">
+          <div class="resultBox" id="finalBox"></div>
+          <div style="text-align:center;margin-top:10px">
+            <button class="btn" onclick="restart()">Restart Quiz</button>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="small">Source: 10th Phy Ch 10 (PDF extract you provided)</div>
+          <div class="small">If any mistake, report to your source</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* Quiz data (same 88 items) */
+const quiz = [
+  { q:"A spider detects its prey due to ______ produced in the web", o:["Movement","Disturbance","Vibration","Elasticity"], a:2 },
+  { q:"A body is said to be ______ if it moves back and forth about a point", o:["least circulate","vibrating","rotating","none of these"], a:1 },
+  { q:"The particles of the solid can vibrate about their ______", o:["vertices","edges","mean position","length"], a:2 },
+  { q:"Vibration is also known as", o:["Trip","Movement","Oscillation","Circulation"], a:2 },
+  { q:"Motion of mass attached to spring is an example of ______ motion.", o:["simple harmonic","linear","circular","vibration"], a:0 },
+  { q:"The force applied on a body is directly proportional to the change in length. This is,", o:["Weber Fechner law","Hooke's Law","Law of gravitation","Archimedes principle"], a:1 },
+  { q:"The maximum potential energy of a vibrating mass attached to a spring is at", o:["Equilibrium position","Extreme position","Between equilibrium and extreme positions","All the above"], a:1 },
+  { q:"In F = kx, k indicates,", o:["force constant","spring constant","constant","displacement"], a:1 },
+  { q:"The value of k depends upon ______ of spring.", o:["length","width","elasticity","stiffness"], a:2 },
+  { q:"The value of spring constant in case of soft springs is.", o:["small","large","mild","none"], a:0 },
+
+  { q:"Force exerted on the body is always directed ______ the displacement of mass.", o:["towards","opposite to","at","away from"], a:1 },
+  { q:"A ______ force always pushes or pulls the object performing oscillatory motion towards the mean position.", o:["gravitational","applied","spring","restoring force"], a:3 },
+  { q:"The magnitude of the restoring force ______ with the distance from the mean position.", o:["decreases","not change","increases","remains same"], a:2 },
+  { q:"Due to ______ the mass does not stop at the mean position but continues its motion.", o:["restoring force","inertia","reactional force","gravitational force"], a:1 },
+  { q:"The speed of mass ______ it moves towards the extreme position.", o:["remains some","increases","decreases","none of these"], a:2 },
+  { q:"The ratio of exerted force to displacement is called ______", o:["Hooke's Law","spring constant","restoring force","All of these"], a:1 },
+  { q:"Kinetic energy is ______ at extreme position.", o:["minimum","moderate","high","zero"], a:0 },
+  { q:"In ball and bowl system the ______ force act as restoring force.", o:["gravitational","applied","reactional","none of these"], a:0 },
+  { q:"Ball and bowl system is an example of ______.", o:["gravitational","Law of mass action","SHM","Hooke's law"], a:2 },
+  { q:"In ball and bowl system the mean position is at ______.", o:["Earth","extreme position","floor of bowl","centre of bowl"], a:3 },
+
+  { q:"A human eardrum can oscillate back and forth up to ______ times in one second.", o:["20,000","2,000","200,000","200"], a:0 },
+  { q:"The displacement of an object in SHM when the kinetic energy and potential energy is equal is ______.", o:["Equilibrium position","Extreme position","In the middle of equilibrium and extreme positions","All the above"], a:2 },
+  { q:"The to and fro motion of ball about mean position continues till all its energy is lost due to ______.", o:["Gravitational","reactional force","friction","weight"], a:2 },
+  { q:"In ______ position, the net force on bob is zero and the bob is stationary.", o:["equilibrium","frictional","extreme","none of these"], a:0 },
+  { q:"The period of a pendulum is independent of its ______.", o:["length","mass","amplitude","both b and c"], a:3 },
+  { q:"The time period T of simple harmonic motion of a mass m attached to a spring is given by ______.", o:["T = 4π √(l/g)","T = 2π √(l/g)","T = 2π √(m/k)","T = 2π √(l/k)"], a:2 },
+  { q:"Which is example of simple harmonic motion ______.", o:["up and down motion of leaf in water pond","motion of a ceiling fan","motion of hands of clock","none of these"], a:2 },
+  { q:"The time taken by vibrating body to complete one vibration is ______.", o:["Frequency","Time period","Pitch","Altitude"], a:1 },
+  { q:"If the mass of bob of a simple pendulum is doubled, its time period ______.", o:["is doubled","becomes four times","remains the same","none of the above"], a:2 },
+  { q:"If the length of a simple pendulum is halved, its time period T will become ______.", o:["T/2","T/√2","√(2T)","2T"], a:1 },
+
+  { q:"Frequency is ______ of time period.", o:["reciprocal","inversely proportional","directly proportional","none of these"], a:0 },
+  { q:"The product of frequency and time period is equal to ______.", o:["√2","1","0","λ"], a:1 },
+  { q:"Christian Huygen invented the pendulum clock in ______.", o:["1658","1657","1656","1654"], a:1 },
+  { q:"The net force is zero when bob of simple pendulum is", o:["Moving with uniform speed","at rest","Both of these","none of these"], a:2 },
+  { q:"In case of simple pendulum which component of weight acts as restoring force", o:["mg sinθ","mg cosθ","mg","None of these"], a:0 },
+  { q:"In SHM acceleration of vibrating body is always directed towards", o:["extreme position","away from extreme position","towards mean position","way from extreme position"], a:2 },
+  { q:"In SHM acceleration of vibratory motion is maximum at ______.", o:["mean position","extreme position","Both a and b","None of these"], a:1 },
+  { q:"In SHM velocity of vibrating body is maximum at", o:["Mean position","extreme","Both a and b","none of these"], a:0 },
+  { q:"In SHM velocity of vibrating body is zero at", o:["Mean position","Extreme","Both a and b","non these"], a:1 },
+  { q:"Mathematically, S:H:M is represented as", o:["a ∝ x","a ∝ -x","a ∝ -x²","a = x"], a:1 },
+
+  { q:"If length of simple pendulum is halved its time period becomes", o:["T/2","T/√2","1/√(2T)","√(2T)"], a:1 },
+  { q:"If mass of bob of simple pendulum is doubled its time period will", o:["doubled","Four times","remain the same","none of these"], a:2 },
+  { q:"Which one of the following is not example of SHM", o:["Mass attached to spring...","ball and bowel system","simple pendulum","A bouncing ball"], a:3 },
+  { q:"Time period of simple pendulum is independent of", o:["mass","Amplitude","length","Both a and b"], a:3 },
+  { q:"Time required to complete one cycle is called", o:["amplitude","frequency","Time period","none of these"], a:2 },
+  { q:"Number of vibrations completed in one second is called", o:["Frequency","time period","Amplitude","none of these"], a:0 },
+  { q:"______ developed first pendulum clock that could accurately measure time.", o:["Galileo","Archimedes","Einstein","Huygens"], a:3 },
+  { q:"Vibratory motion of ideal systems in the absence of any friction or resistance continues ______.", o:["indefinitely","directly","definitely","all of these"], a:0 },
+  { q:"The oscillations of a system in the presence of some resistive force are ______.", o:["wave motion","wavelength","damped oscillations","both a and b"], a:2 },
+  { q:"Shock absorbers damp vibrations and convert their energy into ______ energy of oil.", o:["Kinetic","potential","solar","heat"], a:3 },
+
+  { q:"______ are travelling disturbance.", o:["waves.","Power","frequency","time"], a:0 },
+  { q:"Wave transfer ______.", o:["energy","Power","frequency","disturbance"], a:0 },
+  { q:"There are ______ basic types of waves:", o:["2","3","4","5"], a:0 },
+  { q:"Such waves which require medium for their production and propagation are called ______ waves.", o:["Radio","Some electromagnetic","Mechanical","X-rays"], a:2 },
+  { q:"Electromagnetic waves consist of electric and magnetic fields oscillating ______ to each other", o:["opposite","perpendicular","in accordance","both a and b"], a:1 },
+  { q:"Heat and light waves are ______.", o:["electromagnetic","damped","mechanical","none"], a:0 },
+  { q:"______ are parts of longitudinal wave where loops of spring are far apart from each other.", o:["compressions","rarefactions","crest","troughs"], a:1 },
+  { q:"Waves which do not require medium is called ______.", o:["Electromagnetic waves","mechanical waves","Both a and b","none of these"], a:0 },
+  { q:"Electromagnetic waves consist of ______.", o:["electric field","Magnetic field","electric field and magnetic field","none of these"], a:2 },
+  { q:"Heat and light waves are some examples of ______.", o:["Mechanical waves","Transverse wave","Longitudinal waves","Electromagnetic waves"], a:3 },
+
+  { q:"Transverse waves move through solids at ______ of the speed of longitudinal waves.", o:["more than half","half","less than half","equal"], a:0 },
+  { q:"In the particles of medium move back and forth along the direction of propagation of waves.", o:["crests.","longitudinal waves","transverse waves","compressions"], a:1 },
+  { q:"The distance between two consecutive crests and troughs is called ______.", o:["wave motion","wave frequency","wave amplitude","wave length"], a:3 },
+  { q:"The amount of energy carried by the wave depends on the ______ of stretched string from its rest position.", o:["amplitude","wave length","distance","frequency"], a:0 },
+  { q:"______ are highest points", o:["Crest","through","amplitude","none of these"], a:0 },
+  { q:"______ are lowest point", o:["crest","trough","amplitude","none of these"], a:1 },
+  { q:"Water and light waves are ______.", o:["transverse waves","longitudinal wave","electromagnetic waves","None of these"], a:2 },
+  { q:"Energy is transferred from one place of medium to the other in the form of ______.", o:["waves","Power","frequency","time"], a:0 },
+  { q:"The relation between the velocity, frequency and wavelength of the wave is known as", o:["spring constant","amplitude","wave equation","spring constant"], a:2 },
+  { q:"High frequency wave carries __________.", o:["less energy","more energy","both a and b","none of these"], a:1 },
+
+  { q:"Earthquake produces waves through the body of the Earth in form of __________.", o:["transverse wave","longitudinal waves","seismic waves","none of these"], a:2 },
+  { q:"________ are region where pressure on the layer of air is more than surroundings", o:["compression","rarefaction","diffraction","interference"], a:0 },
+  { q:"________ are the region where pressure on the layer of the air is less than surrounding", o:["compression","rarefaction","diffraction","interference"], a:1 },
+  { q:"The relation between velocity, wavelength and time period is:", o:["λ = v/T","v = λ T","λ = v f","T = λ / v"], a:1 },
+  { q:"Wave equation is true for __________.", o:["transverse waves","longitudinal waves","Both a and b","none of these"], a:2 },
+  { q:"The apparatus used to study the properties of waves is:", o:["Ripple tank","Stroboscope","Stethoscope","Endoscope"], a:0 },
+  { q:"Vibrator is an electric motor.", o:["oscillating","moving","vibrating","wave"], a:2 },
+  { q:"Crests and troughs appear as ________ lines respectively.", o:["dark and light","bright and dark","dull and shining","shining and dull"], a:1 },
+  { q:"The bouncing back of a wave in the same medium after striking a non-transparent medium is:", o:["Reflection","Refraction","Interference","Diffraction"], a:0 },
+  { q:"In reflection, angle of incidence i is ________ angle of reflection:", o:["greater than","less than","equal to","all of them"], a:2 },
+
+  { q:"When a ray of light enters from one transparent medium to another transparent medium, it bends from its path is called:", o:["Reflection","Refraction","Interference","Diffraction"], a:1 },
+  { q:"Refraction of light rays depend on the ________ of light rays:", o:["Speed","Frequency","Amplitude","Wavelength"], a:0 },
+  { q:"Refraction of water waves depend on the ________ of water waves:", o:["Depth","Frequency","Amplitude","All of them"], a:0 },
+  { q:"The bending of waves around the corners of obstacles is:", o:["Reflection","Refraction","Interference","Diffraction"], a:3 },
+  { q:"Diffraction of waves can clearly be observed if size of the slit or obstacle is nearly equal to ________ of wave:", o:["Trough","Crests","Amplitude","Wavelength"], a:3 },
+  { q:"Transmission can be heard in such areas where the waves cannot reach directly due to:", o:["Reflection","Refraction","Interference","Diffraction"], a:3 },
+  { q:"The slit or obstacles must be equal to ________ of wave to observe diffraction properly.", o:["frequency","amplitude","wavelength","time period"], a:2 },
+  { q:"On screen crest appear as .....", o:["Bright line","dark line","silver line","golden line"], a:0 }
+];
+
+const total = quiz.length;
+let idx = 0, score = 0, autoTimer = null;
+const qnum = document.getElementById('qnum');
+const qtext = document.getElementById('qtext');
+const opts = document.getElementById('opts');
+const feedback = document.getElementById('feedback');
+const scoreEl = document.getElementById('score');
+const fill = document.getElementById('fill');
+const pct = document.getElementById('pct');
+const endBox = document.getElementById('end');
+const finalBox = document.getElementById('finalBox');
+const nextBtn = document.getElementById('nextBtn');
+
+nextBtn.addEventListener('click', ()=> {
+  // clear any pending auto-timer and go next
+  if(autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+  goNext();
+});
+
+function render(i){
+  // reset visible next button
+  nextBtn.style.display = 'none';
+  qnum.textContent = `Question ${i+1} / ${total}`;
+  qtext.textContent = quiz[i].q;
+  opts.innerHTML = '';
+  feedback.textContent = '';
+  quiz[i].o.forEach((txt, j)=>{
+    const d = document.createElement('div');
+    d.className = 'opt';
+    d.innerHTML = `<strong>${String.fromCharCode(65+j)}.</strong> ${txt}`;
+    d.addEventListener('click', ()=>select(j,d));
+    opts.appendChild(d);
+  });
+  updateProgress();
+}
+
+function select(chosen, el){
+  // disable click on all options
+  const children = Array.from(opts.children);
+  children.forEach(c=>{
+    c.classList.add('disabled');
+    c.style.pointerEvents = 'none';
+  });
+
+  const correct = quiz[idx].a;
+
+  // clear previous timer if any
+  if(autoTimer){ clearTimeout(autoTimer); autoTimer = null; }
+
+  if(chosen === correct){
+    el.classList.add('correct');
+    feedback.textContent = '✔ Correct';
+    score++;
+    scoreEl.textContent = score;
+    // auto advance after 700ms
+    autoTimer = setTimeout(() => { autoTimer = null; goNext(); }, 700);
+    // optionally show Next button too (hidden) - we keep it hidden for correct case
+    nextBtn.style.display = 'none';
+  } else {
+    // wrong answer: mark wrong, show correct, and SHOW Next button (wait for user)
+    el.classList.add('wrong');
+    feedback.textContent = `✖ Wrong — Correct: ${String.fromCharCode(65+correct)}.`;
+    const corrEl = children[correct];
+    if(corrEl) corrEl.classList.add('correct');
+    // show Next button so user can continue when ready
+    nextBtn.style.display = 'inline-block';
+  }
+  updateProgress();
+}
+
+function goNext(){
+  idx++;
+  if(idx < total){
+    render(idx);
+  } else {
+    finish();
+  }
+}
+
+function updateProgress(){
+  const pctVal = Math.round((idx/total)*100);
+  if(fill) fill.style.width = pctVal + '%';
+  if(pct) pct.textContent = pctVal + '%';
+}
+
+function finish(){
+  document.getElementById('qnum').textContent = '';
+  document.getElementById('qtext').textContent = '';
+  opts.innerHTML = '';
+  feedback.textContent = '';
+  endBox.style.display = 'block';
+  finalBox.innerHTML = `<div style="font-size:18px;font-weight:700">Quiz Completed 🎉</div>
+    <div style="margin-top:8px">Your Score: <strong>${score}</strong> / ${total}</div>`;
+  if(fill) fill.style.width = '100%';
+  if(pct) pct.textContent = '100%';
+  nextBtn.style.display = 'none';
+}
+
+function restart(){
+  idx = 0; score = 0;
+  endBox.style.display = 'none';
+  render(0);
+}
+
+
+render(0);
+  
+  
+</script>
+    <script>
+document.addEventListener("keydown", function (e) {
+  // agar quiz khatam ho chuka ho ya options available na hon
+  if (!opts || opts.children.length === 0) return;
+
+  // check: koi option pehle hi disable to nahi
+  const anyDisabled = Array.from(opts.children)
+    .some(el => el.classList.contains("disabled"));
+  if (anyDisabled) return;
+
+  const key = e.key.toLowerCase();
+  let index = null;
+
+  if (key === "a") index = 0;
+  if (key === "b") index = 1;
+  if (key === "c") index = 2;
+  if (key === "d") index = 3;
+
+  if (index !== null && opts.children[index]) {
+    opts.children[index].click();
+  }
+});
+</script>
+</body>
+</html>
